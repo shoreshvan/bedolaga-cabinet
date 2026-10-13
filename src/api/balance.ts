@@ -65,7 +65,7 @@ export const balanceApi = {
     if (paymentOption) {
       payload.payment_option = paymentOption;
     }
-    payload.language = i18n.language || 'ru';
+    payload.language = i18n.language || 'fa';
     const response = await apiClient.post('/cabinet/balance/topup', payload);
     return response.data;
   },

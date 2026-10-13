@@ -2,7 +2,10 @@ import { useTranslation } from 'react-i18next';
 import { useState, useRef, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { infoApi } from '@/api/info';
+import { ENABLED_LANGS } from '@/i18n';
 import { ChevronDownIcon } from '@/components/icons';
+
+const ENABLED_SET = new Set<string>([...ENABLED_LANGS]);
 
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation();
@@ -17,10 +20,12 @@ export default function LanguageSwitcher() {
     queryFn: infoApi.getLanguages,
     staleTime: 1000 * 60 * 5,
   });
-  const availableLanguages = data?.languages ?? [];
+  // تک‌زبانه: بک‌اند ممکن است هنوز ru/en/zh برگرداند — فقط روشن‌ها را نشان بده.
+  // وقتی فقط fa روشن است، لیست به ۱ می‌رسد و سوئیچر طبق شرط پایین مخفی می‌شود.
+  const availableLanguages = (data?.languages ?? []).filter((l) => ENABLED_SET.has(l.code));
 
   const currentLang = availableLanguages.find((l) => l.code === i18n.language) ||
-    availableLanguages[0] || { code: 'ru', name: 'RU', flag: '🇷🇺' };
+    availableLanguages[0] || { code: 'fa', name: 'FA', flag: '🇮🇷' };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -35,6 +40,8 @@ export default function LanguageSwitcher() {
   const changeLanguage = (code: string) => {
     // i18n.ts subscribes to languageChanged and syncs <html lang> + dir
     // centrally — no need to set documentElement.dir here.
+    // نگهبان تک‌زبانه: زبان خاموش را قبول نکن.
+    if (!ENABLED_SET.has(code)) return;
     i18n.changeLanguage(code);
     setIsOpen(false);
   };

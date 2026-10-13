@@ -23,7 +23,7 @@ const LANG_CURRENCY_MAP: Record<
   fa: { currency: 'IRR', locale: 'fa-IR', symbol: '﷼', key: 'IRR' },
 };
 
-const DEFAULT_CURRENCY = { currency: 'RUB', locale: 'ru-RU', symbol: '₽' };
+const DEFAULT_CURRENCY = { currency: 'IRR', locale: 'fa-IR', symbol: '﷼' };
 
 // Глобальный кэш курсов. Заполняется один раз из useCurrency (см. setExchangeRates ниже)
 // и используется здесь синхронно. Без него formatPrice падал в "просто замена символа",
@@ -35,7 +35,7 @@ export function setExchangeRates(rates: ExchangeRates | null): void {
 }
 
 export function formatPrice(kopeks: number, lang?: string): string {
-  const resolvedLang = lang || i18next.language || 'ru';
+  const resolvedLang = lang || i18next.language || 'fa';
   const config = LANG_CURRENCY_MAP[resolvedLang] || DEFAULT_CURRENCY;
   let amount = kopeks / 100;
 

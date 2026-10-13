@@ -112,11 +112,11 @@ export default function AdminLandingEditor() {
   }, []);
 
   // Locale editing state
-  const [editingLocale, setEditingLocale] = useState<SupportedLocale>('ru');
+  const [editingLocale, setEditingLocale] = useState<SupportedLocale>('fa');
 
   // Form state — text fields are now LocaleDict
   const [slug, setSlug] = useState('');
-  const [title, setTitle] = useState<LocaleDict>({ ru: '' });
+  const [title, setTitle] = useState<LocaleDict>({ fa: '' });
   const [subtitle, setSubtitle] = useState<LocaleDict>({});
   const [isActive, setIsActive] = useState(true);
   const [metaTitle, setMetaTitle] = useState<LocaleDict>({});
@@ -231,7 +231,7 @@ export default function AdminLandingEditor() {
     if (!landingData || formPopulated.current) return;
     formPopulated.current = true;
     setSlug(landingData.slug);
-    setTitle(toLocaleDict(landingData.title, { ru: '' }));
+    setTitle(toLocaleDict(landingData.title, { fa: '' }));
     setSubtitle(toLocaleDict(landingData.subtitle));
     setIsActive(landingData.is_active);
     setMetaTitle(toLocaleDict(landingData.meta_title));

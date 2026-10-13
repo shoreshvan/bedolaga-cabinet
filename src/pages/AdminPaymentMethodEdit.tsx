@@ -89,7 +89,7 @@ function OverpayCertificateSection() {
   };
 
   const expiryDate = certStatus?.not_valid_after
-    ? new Date(certStatus.not_valid_after).toLocaleDateString(localeMap[i18n.language] || 'ru-RU', {
+    ? new Date(certStatus.not_valid_after).toLocaleDateString(localeMap[i18n.language] || 'fa-IR', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',

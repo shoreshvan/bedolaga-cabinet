@@ -569,7 +569,7 @@ function TemplateEditor({
 
 export default function AdminEmailTemplates() {
   const { t, i18n } = useTranslation();
-  const currentLang = i18n.language || 'ru';
+  const currentLang = i18n.language || 'fa';
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
   // Fetch template types list

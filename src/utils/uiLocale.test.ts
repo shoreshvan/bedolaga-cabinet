@@ -21,9 +21,9 @@ describe('uiLocale', () => {
     expect(uiLocale()).toBe('en-US');
   });
 
-  it('падает в ru-RU для неизвестного языка', async () => {
+  it('падает в fa-IR для неизвестного языка', async () => {
     await i18next.changeLanguage('xx');
-    expect(uiLocale()).toBe('ru-RU');
+    expect(uiLocale()).toBe('fa-IR');
   });
 
   it('дата форматируется по языку интерфейса, а не браузера', async () => {

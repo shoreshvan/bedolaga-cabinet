@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import en from './en.json';
+import fa from './fa.json';
 import ru from './ru.json';
 
 /**
- * Синхронность en/ru локалей. i18next настроен с fallbackLng: 'ru' — ключ,
- * отсутствующий в en.json, отдаёт англоязычным пользователям РУССКИЙ текст
+ * Синхронность en/ru/fa локалей. i18next настроен с fallbackLng: 'fa' — ключ,
+ * отсутствующий в en.json, отдаёт англоязычным пользователям ПЕРСИДСКИЙ текст
  * (а не инлайн-дефолт из кода). Так весь namespace resetPassword.* уехал в
  * прод по-русски. Тест ловит новые дыры при добавлении ключей в одну локаль.
  */
@@ -48,6 +49,7 @@ function flatten(tree: Tree, prefix = ''): Map<string, string> {
 
 const enFlat = flatten(en as Tree);
 const ruFlat = flatten(ru as Tree);
+const faFlat = flatten(fa as Tree);
 
 function baseKeys(flat: Map<string, string>): Set<string> {
   return new Set([...flat.keys()].map((k) => k.replace(PLURAL_SUFFIX, '')));
@@ -55,8 +57,9 @@ function baseKeys(flat: Map<string, string>): Set<string> {
 
 const enBases = baseKeys(enFlat);
 const ruBases = baseKeys(ruFlat);
+const faBases = baseKeys(faFlat);
 
-describe('синхронность локалей en/ru', () => {
+describe('синхронность локалей en/ru/fa', () => {
   it('каждый en-ключ существует в ru', () => {
     const missing = [...enBases].filter((k) => !ruBases.has(k));
     expect(missing).toEqual([]);
@@ -72,6 +75,18 @@ describe('синхронность локалей en/ru', () => {
     expect(missing).toEqual([]);
   });
 
+  it('каждый ru-ключ существует в fa (кроме ru-only словарей настроек)', () => {
+    const missing = [...ruBases].filter(
+      (k) => !faBases.has(k) && !RU_ONLY_NAMESPACES.some((ns) => k.startsWith(ns)),
+    );
+    expect(missing).toEqual([]);
+  });
+
+  it('каждый en-ключ существует в fa', () => {
+    const missing = [...enBases].filter((k) => !faBases.has(k));
+    expect(missing).toEqual([]);
+  });
+
   it('плейсхолдеры {{...}} совпадают в общих ключах', () => {
     const PH = /\{\{[^}]+\}\}/g;
     const mismatches: string[] = [];
@@ -84,6 +99,17 @@ describe('синхронность локалей en/ru', () => {
       const enPh = (enValue.match(PH) ?? []).sort().join(',');
       if (ruPh !== enPh) {
         mismatches.push(`${key}: ru=[${ruPh}] en=[${enPh}]`);
+      }
+    }
+    for (const [key, ruValue] of ruFlat) {
+      const faValue = faFlat.get(key);
+      if (faValue === undefined) {
+        continue;
+      }
+      const ruPh = (ruValue.match(PH) ?? []).sort().join(',');
+      const faPh = (faValue.match(PH) ?? []).sort().join(',');
+      if (ruPh !== faPh) {
+        mismatches.push(`${key}: ru=[${ruPh}] fa=[${faPh}]`);
       }
     }
     expect(mismatches).toEqual([]);

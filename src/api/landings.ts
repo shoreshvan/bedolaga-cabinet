@@ -166,7 +166,7 @@ export interface GiftClaimResult {
 export type LocaleDict = Record<string, string>;
 
 /** Supported locales for the admin editor */
-export const SUPPORTED_LOCALES = ['ru', 'en', 'zh', 'fa'] as const;
+export const SUPPORTED_LOCALES = ['fa', 'ru', 'en', 'zh'] as const;
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 export const LOCALE_META: Record<SupportedLocale, { flag: string; name: string; rtl: boolean }> = {
@@ -268,11 +268,11 @@ export interface LandingCreateRequest {
 
 export type LandingUpdateRequest = Partial<LandingCreateRequest>;
 
-/** Extract best display string from a LocaleDict: ru -> en -> first available -> '' */
+/** Extract best display string from a LocaleDict: fa -> ru -> en -> first available -> '' */
 export function resolveLocaleDisplay(dict: LocaleDict | string | null | undefined): string {
   if (!dict) return '';
   if (typeof dict === 'string') return dict;
-  return dict.ru || dict.en || Object.values(dict).find((v) => v?.trim()) || '';
+  return dict.fa || dict.ru || dict.en || Object.values(dict).find((v) => v?.trim()) || '';
 }
 
 export function toLocaleDict(
@@ -280,7 +280,7 @@ export function toLocaleDict(
   fallback: LocaleDict = {},
 ): LocaleDict {
   if (value === null || value === undefined) return fallback;
-  if (typeof value === 'string') return value ? { ru: value } : fallback;
+  if (typeof value === 'string') return value ? { fa: value } : fallback;
   return value;
 }
 

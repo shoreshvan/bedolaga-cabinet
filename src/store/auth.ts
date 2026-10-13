@@ -403,7 +403,7 @@ export const useAuthStore = create<AuthState>()(
           email,
           password,
           first_name: firstName,
-          language: navigator.language.split('-')[0] || 'ru',
+          language: navigator.language.split('-')[0] || 'fa',
           referral_code: code,
           campaign_slug: campaignSlug,
           accepted_legal_documents: acceptedLegalDocuments,

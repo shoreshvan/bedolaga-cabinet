@@ -203,7 +203,7 @@ export function EmailQueueCard() {
                     {reason ? ` · ${reason}` : ''}
                   </p>
                   <span className="flex-shrink-0 text-dark-500">
-                    {formatMoment(item.sent_at || item.created_at, i18n.language || 'ru')}
+                    {formatMoment(item.sent_at || item.created_at, i18n.language || 'fa')}
                   </span>
                 </div>
               </li>

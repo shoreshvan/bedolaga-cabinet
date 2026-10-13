@@ -13,7 +13,7 @@ export default function ReminderCards() {
   const navigate = useNavigate();
   const { openLink } = usePlatform();
   const [hidden, setHidden] = useState<Set<number>>(new Set());
-  const lang = (i18n.language || 'ru').split('-')[0];
+  const lang = (i18n.language || 'fa').split('-')[0];
 
   // Без кэша: при каждом открытии главной — свежий список, поэтому после привязки
   // способа входа карточка не мигнёт старой версией.

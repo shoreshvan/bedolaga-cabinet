@@ -729,7 +729,7 @@ export default function AdminTariffCreate() {
                     step={1}
                     placeholder="0"
                   />
-                  <span className="shrink-0 text-dark-400">₽</span>
+                  <span className="shrink-0 text-dark-400">{t('common.currency')}</span>
                   <div className="flex-1" />
                   <button
                     type="button"
@@ -919,7 +919,7 @@ export default function AdminTariffCreate() {
                 step={1}
                 placeholder="0"
               />
-              <span className="text-dark-400">₽</span>
+              <span className="text-dark-400">{t('common.currency')}</span>
             </div>
             <p className="text-xs text-dark-500">{t('admin.tariffs.devicePriceHint')}</p>
             <div className="flex items-center gap-3">
@@ -1093,7 +1093,7 @@ export default function AdminTariffCreate() {
                               step={1}
                               placeholder="0"
                             />
-                            <span className="text-xs text-dark-400">₽</span>
+                            <span className="text-xs text-dark-400">{t('common.currency')}</span>
                             <div className="flex-1" />
                             <button
                               type="button"

@@ -105,7 +105,7 @@ export function CampaignDetailPanel({ campaignId, className }: CampaignDetailPan
                   </span>
                   <span className="font-mono text-accent-400">
                     {formatKopeksToRubles(campaign.total_revenue_kopeks)}
-                    {'\u00A0'}₽
+                    {'\u00A0'}{t('common.currency')}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
@@ -122,7 +122,7 @@ export function CampaignDetailPanel({ campaignId, className }: CampaignDetailPan
                   </span>
                   <span className="font-mono text-dark-100">
                     {formatKopeksToRubles(campaign.avg_check_kopeks)}
-                    {'\u00A0'}₽
+                    {'\u00A0'}{t('common.currency')}
                   </span>
                 </div>
               </div>

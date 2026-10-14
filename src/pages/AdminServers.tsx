@@ -144,7 +144,7 @@ export default function AdminServers() {
                     </span>
                     <span>
                       {server.price_rubles}
-                      {'\u00A0'}₽
+                      {'\u00A0'}{t('common.currency')}
                     </span>
                     <span className="max-w-[200px] truncate font-mono text-xs text-dark-500">
                       {server.squad_uuid}

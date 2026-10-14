@@ -586,7 +586,7 @@ export default function AdminPaymentMethodEdit() {
                 >
                   <span>
                     {value}
-                    {'\u00A0'}₽
+                    {'\u00A0'}{t('common.currency')}
                   </span>
                   <span className="text-base leading-none">×</span>
                 </button>

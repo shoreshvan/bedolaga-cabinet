@@ -20,10 +20,11 @@ const LANG_CURRENCY_MAP: Record<
   ru: { currency: 'RUB', locale: 'ru-RU', symbol: '₽' },
   en: { currency: 'USD', locale: 'en-US', symbol: '$', key: 'USD' },
   zh: { currency: 'CNY', locale: 'zh-CN', symbol: '¥', key: 'CNY' },
-  fa: { currency: 'IRR', locale: 'fa-IR', symbol: '﷼', key: 'IRR' },
+  // Toman is the backend's home currency: no FX conversion (no `key`), suffix "تومان".
+  fa: { currency: 'IRR', locale: 'fa-IR', symbol: 'تومان' },
 };
 
-const DEFAULT_CURRENCY = { currency: 'IRR', locale: 'fa-IR', symbol: '﷼' };
+const DEFAULT_CURRENCY = { currency: 'IRR', locale: 'fa-IR', symbol: 'تومان' };
 
 // Глобальный кэш курсов. Заполняется один раз из useCurrency (см. setExchangeRates ниже)
 // и используется здесь синхронно. Без него formatPrice падал в "просто замена символа",
@@ -38,6 +39,15 @@ export function formatPrice(kopeks: number, lang?: string): string {
   const resolvedLang = lang || i18next.language || 'fa';
   const config = LANG_CURRENCY_MAP[resolvedLang] || DEFAULT_CURRENCY;
   let amount = kopeks / 100;
+
+  // fa/Toman is the home currency — the amount is already in Toman. No FX conversion,
+  // whole numbers, "تومان" suffix (there is no ISO 4217 code for Toman).
+  if (resolvedLang === 'fa') {
+    const grouped = new Intl.NumberFormat('fa-IR', { maximumFractionDigits: 0 }).format(
+      Math.round(amount),
+    );
+    return `${grouped} ${config.symbol}`;
+  }
 
   // Конвертация по курсу для не-рублёвых локалей. Без rates fallback на сырую сумму
   // (поведение до фикса), чтобы первый рендер до загрузки курсов не отдавал NaN.

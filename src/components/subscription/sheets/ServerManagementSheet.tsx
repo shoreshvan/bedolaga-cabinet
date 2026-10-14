@@ -45,7 +45,7 @@ export function ServerManagementSheet({
 
   const formatPrice = (kopeks: number) => {
     const rubles = kopeks / 100;
-    return rubles % 1 === 0 ? `${rubles}\u00A0₽` : `${rubles.toFixed(2)}\u00A0₽`;
+    return rubles % 1 === 0 ? `${rubles}\u00A0${t('common.currency')}` : `${rubles.toFixed(2)}\u00A0${t('common.currency')}`;
   };
 
   const { data: countriesData, isLoading: countriesLoading } = useQuery({

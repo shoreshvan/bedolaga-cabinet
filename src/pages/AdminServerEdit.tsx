@@ -223,7 +223,7 @@ export default function AdminServerEdit() {
                 min={0}
                 step={1}
               />
-              <span className="text-dark-400">₽</span>
+              <span className="text-dark-400">{t('common.currency')}</span>
             </div>
             <p className="mt-1 text-xs text-dark-500">{t('admin.servers.priceHint')}</p>
           </div>

@@ -59,7 +59,7 @@ const formatRubles = (kopeks: number) => {
   const locale = localeMap[i18n.language] || 'fa-IR';
   return (
     (kopeks / 100).toLocaleString(locale, { minimumFractionDigits: 0, maximumFractionDigits: 2 }) +
-    ' ₽'
+    ' ' + i18n.t('common.currency')
   );
 };
 

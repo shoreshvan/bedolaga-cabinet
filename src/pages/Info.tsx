@@ -568,12 +568,9 @@ export default function Info() {
       }
 
       const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat(uiLocale(), {
-          style: 'currency',
-          currency: 'RUB',
-          minimumFractionDigits: 0,
+        return `${new Intl.NumberFormat(uiLocale(), {
           maximumFractionDigits: 0,
-        }).format(amount);
+        }).format(amount)} ${t('common.currency')}`;
       };
 
       const getStatusBadge = (tier: LoyaltyTierInfo) => {

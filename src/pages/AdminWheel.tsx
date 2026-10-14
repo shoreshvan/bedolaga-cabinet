@@ -127,7 +127,7 @@ function SortablePrizeCard({
           <div className="truncate font-semibold text-dark-100">{prize.display_name}</div>
           <div className="truncate text-xs text-dark-400 sm:text-sm">
             {t(`admin.wheel.prizes.types.${prize.prize_type}`)} •{' '}
-            {(prize.prize_value_kopeks / 100).toFixed(0)}₽
+            {(prize.prize_value_kopeks / 100).toFixed(0)}{' '}{t('common.currency')}
           </div>
         </div>
 
@@ -1099,7 +1099,7 @@ function InlinePrizeForm({
             className="input w-full"
           />
           <p className="mt-1 text-xs text-dark-500">
-            = {(toNumber(formData.prize_value_kopeks) / 100).toFixed(2)} RUB
+            = {(toNumber(formData.prize_value_kopeks) / 100).toFixed(2)} {t('common.currency')}
           </p>
         </div>
 

@@ -57,17 +57,18 @@ export function useCurrency() {
         return formatDecimal(rubAmount, decimals, uiLocale());
       }
 
-      // Convert to target currency
+      // fa/Toman is the backend's home currency — the amount is already in Toman,
+      // so it must NOT be converted via FX. Whole numbers (amounts are large).
+      if (targetCurrency === 'IRR') {
+        return Math.round(rubAmount).toLocaleString('fa-IR');
+      }
+
+      // Other locales: convert from the home currency to the viewer's currency.
       const convertedAmount = currencyApi.convertFromRub(
         rubAmount,
         targetCurrency as keyof ExchangeRates,
         exchangeRates,
       );
-
-      // For IRR (Iranian Toman), use no decimals as amounts are large
-      if (targetCurrency === 'IRR') {
-        return Math.round(convertedAmount).toLocaleString('fa-IR');
-      }
 
       return formatDecimal(convertedAmount, decimals, uiLocale());
     },
@@ -93,7 +94,8 @@ export function useCurrency() {
   // Get raw converted amount (for calculations)
   const convertAmount = useCallback(
     (rubAmount: number): number => {
-      if (isRussian) {
+      // Home currency (ru base, or fa/Toman for this backend) — no FX conversion.
+      if (isRussian || targetCurrency === 'IRR') {
         return rubAmount;
       }
       return currencyApi.convertFromRub(
@@ -108,7 +110,8 @@ export function useCurrency() {
   // Convert from user's currency back to rubles
   const convertToRub = useCallback(
     (amount: number): number => {
-      if (isRussian) {
+      // Home currency (ru base, or fa/Toman for this backend) — amount already in home units.
+      if (isRussian || targetCurrency === 'IRR') {
         return amount;
       }
       return currencyApi.convertToRub(amount, targetCurrency as keyof ExchangeRates, exchangeRates);

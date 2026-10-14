@@ -504,7 +504,9 @@ export default function TopUpAmount() {
                 }
               }}
               placeholder="0"
-              className="h-14 w-full bg-transparent px-4 pr-12 text-xl font-bold text-dark-100 placeholder:text-dark-600 focus:outline-none"
+              className={`h-14 w-full bg-transparent px-4 ${
+                currencySymbol.length > 2 ? 'pr-24' : 'pr-12'
+              } text-xl font-bold text-dark-100 placeholder:text-dark-600 focus:outline-none`}
               autoComplete="off"
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-base font-semibold text-dark-500">

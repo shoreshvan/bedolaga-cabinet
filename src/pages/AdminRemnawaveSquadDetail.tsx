@@ -151,7 +151,7 @@ export default function AdminRemnawaveSquadDetail() {
               />
               <StatCard
                 label={t('admin.remnawave.squads.price', 'Price')}
-                value={`${((squad.price_kopeks ?? 0) / 100).toFixed(0)}\u00A0₽`}
+                value={`${((squad.price_kopeks ?? 0) / 100).toFixed(0)}\u00A0${t('common.currency')}`}
                 icon={<BanknotesIcon className="h-5 w-5" />}
                 tone="neutral"
               />

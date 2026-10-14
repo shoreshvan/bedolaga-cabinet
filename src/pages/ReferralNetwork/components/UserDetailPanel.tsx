@@ -141,7 +141,7 @@ export function UserDetailPanel({ userId, className }: UserDetailPanelProps) {
                   </span>
                   <span className="font-mono text-dark-100">
                     {formatKopeksToRubles(user.personal_spent_kopeks)}
-                    {'\u00A0'}₽
+                    {'\u00A0'}{t('common.currency')}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
@@ -150,7 +150,7 @@ export function UserDetailPanel({ userId, className }: UserDetailPanelProps) {
                   </span>
                   <span className="font-mono text-accent-400">
                     {formatKopeksToRubles(user.personal_revenue_kopeks)}
-                    {'\u00A0'}₽
+                    {'\u00A0'}{t('common.currency')}
                   </span>
                 </div>
               </div>
@@ -180,7 +180,7 @@ export function UserDetailPanel({ userId, className }: UserDetailPanelProps) {
                   </span>
                   <span className="font-mono text-dark-100">
                     {formatKopeksToRubles(user.branch_revenue_kopeks)}
-                    {'\u00A0'}₽
+                    {'\u00A0'}{t('common.currency')}
                   </span>
                 </div>
               </div>

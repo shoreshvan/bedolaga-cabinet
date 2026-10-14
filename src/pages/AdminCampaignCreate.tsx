@@ -403,7 +403,7 @@ export default function AdminCampaignCreate() {
               min={0}
               step={1}
             />
-            <span className="text-dark-300">₽</span>
+            <span className="text-dark-300">{t('common.currency')}</span>
           </div>
         </div>
       )}

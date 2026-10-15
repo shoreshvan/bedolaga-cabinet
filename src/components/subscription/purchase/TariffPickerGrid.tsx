@@ -9,6 +9,7 @@ import { getGlassColors } from '../../../utils/glassTheme';
 import { ArrowDownIcon, DevicesIcon, GiftIcon, RestartIcon } from '@/components/icons';
 import type { Tariff, Subscription, PurchaseOptions } from '../../../types';
 import { tariffAction, type TariffActionKind } from './tariffAction';
+import { trafficLimitLabel } from '../../../utils/formatNumber';
 
 /** Подпись кнопки для действий, которые ведут в один и тот же сценарий выбора. */
 const TARIFF_ACTION_LABEL: Record<Exclude<TariffActionKind, 'current-daily' | 'switch'>, string> = {
@@ -171,7 +172,9 @@ export function TariffPickerGrid({
                 <div className="flex flex-wrap gap-4 text-sm">
                   <div className="flex items-center gap-1.5">
                     <ArrowDownIcon className="h-4 w-4 text-accent-400" />
-                    <span className="font-medium text-dark-200">{tariff.traffic_limit_label}</span>
+                    <span className="font-medium text-dark-200">
+                      {trafficLimitLabel(tariff, t)}
+                    </span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <DevicesIcon className="h-4 w-4 text-dark-400" />

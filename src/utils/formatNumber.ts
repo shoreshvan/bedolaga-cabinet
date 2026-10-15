@@ -38,6 +38,28 @@ export function formatGbPair(
   return `${formatGb(usedGb, locale)} / ${formatGb(limitGb, locale)} ${unit}`;
 }
 
+/**
+ * Подпись лимита трафика тарифа на языке интерфейса («100 گیگ» / «نامحدود»).
+ * Сервер присылает готовый `traffic_limit_label` на русском («100 ГБ»),
+ * поэтому витрина строит подпись из числового `traffic_limit_gb`.
+ * Если числа нет (старые моки), откатывается на серверную строку,
+ * чтобы ничего не ломалось.
+ */
+export function trafficLimitLabel(
+  tariff: {
+    traffic_limit_gb?: number;
+    is_unlimited_traffic?: boolean;
+    traffic_limit_label: string;
+  },
+  t: (key: string) => string,
+): string {
+  if (tariff.is_unlimited_traffic) return t('subscription.unlimited');
+  if (Number.isFinite(tariff.traffic_limit_gb)) {
+    return `${formatGb(tariff.traffic_limit_gb as number)} ${t('common.units.gb')}`;
+  }
+  return tariff.traffic_limit_label;
+}
+
 /** С какого значения подписи оси сокращаются («12 тыс.», «4 млн»). */
 const AXIS_COMPACT_FROM = 10_000;
 

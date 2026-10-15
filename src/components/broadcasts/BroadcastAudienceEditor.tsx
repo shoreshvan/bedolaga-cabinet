@@ -302,7 +302,7 @@ export function BroadcastAudienceEditor({
       field: 'traffic_zero',
       label: t('admin.broadcasts.atomic.trafficZero', 'Использованный трафик равен 0'),
       kind: 'fixed',
-      values: [{ value: 'zero', label: `0 ${t('common.units.gb', 'ГБ')}` }],
+      values: [{ value: 'zero', label: `0 ${t('common.units.gb', 'گیگ')}` }],
     },
     {
       field: 'traffic_gt',
@@ -585,7 +585,7 @@ export function BroadcastAudienceEditor({
                       onChange={(event) => changeCondition(index, { value: event.target.value })}
                       aria-label={t('admin.broadcasts.atomic.gigabytes', 'Гигабайты')}
                     />
-                    <span className="text-sm text-dark-400">{t('common.units.gb', 'ГБ')}</span>
+                    <span className="text-sm text-dark-400">{t('common.units.gb', 'گیگ')}</span>
                   </div>
                 ) : choice?.kind === 'user' ? (
                   <UserLookup

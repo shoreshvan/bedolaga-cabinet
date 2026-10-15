@@ -4,6 +4,7 @@ import { ChevronRightIcon } from '@/components/icons';
 import { useCurrency } from '../../../hooks/useCurrency';
 import { usePromoDiscount } from '../../../hooks/usePromoDiscount';
 import type { Tariff } from '../../../types';
+import { trafficLimitLabel } from '../../../utils/formatNumber';
 import { dailyPriceQuote } from './dailyPrice';
 import { tariffAction } from './tariffAction';
 import type { TariffPickerGridProps } from './TariffPickerGrid';
@@ -58,11 +59,12 @@ export function TariffPickerLite({
   };
 
   const details = (tariff: Tariff) => {
+    const traffic = trafficLimitLabel(tariff, t);
     const devices =
       tariff.device_limit === 0
         ? t('lite.tariff.unlimitedDevices', 'Устройств без ограничений')
         : t('subscription.devices', { count: tariff.device_limit });
-    return `${tariff.traffic_limit_label}, ${devices}`;
+    return `${traffic}, ${devices}`;
   };
 
   return (

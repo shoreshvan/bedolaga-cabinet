@@ -232,7 +232,7 @@ export default function SuccessNotificationModal() {
                 {t('successNotification.trafficAdded', 'Traffic added')}
               </span>
               <span className="text-lg font-bold text-success-400">
-                +{data.trafficGbAdded} {t('common.units.gb', 'GB')}
+                +{data.trafficGbAdded} {t('common.units.gb', 'گیگ')}
               </span>
             </div>
           )}
@@ -243,7 +243,7 @@ export default function SuccessNotificationModal() {
                 {t('successNotification.totalTraffic', 'Total traffic')}
               </span>
               <span className="font-semibold text-dark-100">
-                {data.newTrafficLimitGb} {t('common.units.gb', 'GB')}
+                {data.newTrafficLimitGb} {t('common.units.gb', 'گیگ')}
               </span>
             </div>
           )}

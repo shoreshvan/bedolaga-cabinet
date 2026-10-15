@@ -185,7 +185,7 @@ export default function SubscriptionListCard({
               <span className="text-[11px] tabular-nums" style={{ color: g.textSecondary }}>
                 {isUnlimited
                   ? '∞'
-                  : `${trafficUsed.toFixed(1)} / ${trafficLimit} ${t('common.units.gb', 'ГБ')}`}
+                  : `${trafficUsed.toFixed(1)} / ${trafficLimit} ${t('common.units.gb', 'گیگ')}`}
               </span>
             </div>
             {!isUnlimited && (

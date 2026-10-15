@@ -188,7 +188,7 @@ export default function AdminBroadcastDetail() {
                     expired: t('admin.broadcasts.atomic.expired', 'Истекла'),
                     trial: t('admin.broadcasts.atomic.trial', 'Триальная'),
                     paid: t('admin.broadcasts.atomic.paid', 'Оплаченная'),
-                    zero: '0 ГБ',
+                    zero: '0 گیگ',
                     yes: t('common.yes', 'Да'),
                     no: t('common.no', 'Нет'),
                     custom_referrals: t('admin.broadcasts.atomic.referral', 'По рефералу'),
@@ -281,7 +281,7 @@ export default function AdminBroadcastDetail() {
                       {fieldLabel}{' '}
                       {['traffic_gt', 'traffic_lt'].includes(condition.field) ? '' : comparison}{' '}
                       {label}
-                      {['traffic_gt', 'traffic_lt'].includes(condition.field) ? ' ГБ' : ''}
+                      {['traffic_gt', 'traffic_lt'].includes(condition.field) ? ' گیگ' : ''}
                       {condition.value_to ? ` – ${condition.value_to}` : ''}
                     </>
                   )}

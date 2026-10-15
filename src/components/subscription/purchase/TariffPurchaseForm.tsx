@@ -10,6 +10,7 @@ import { dailyPriceQuote } from './dailyPrice';
 import { usePlatform } from '../../../platform';
 import { openPaymentUrl } from '../../../utils/openPaymentUrl';
 import { getMonthlyPriceKopeks } from '../../../utils/pricing';
+import { trafficLimitLabel } from '../../../utils/formatNumber';
 import { pickBestValue } from '../../../utils/bestValue';
 import InsufficientBalancePrompt from '../../InsufficientBalancePrompt';
 import type { Tariff, TariffPeriod } from '../../../types';
@@ -262,7 +263,7 @@ export function TariffPurchaseForm({
         <div className="flex flex-wrap gap-4 text-sm">
           <div>
             <span className="text-dark-500">{t('subscription.traffic')}:</span>
-            <span className="ml-2 text-dark-200">{tariff.traffic_limit_label}</span>
+            <span className="ml-2 text-dark-200">{trafficLimitLabel(tariff, t)}</span>
           </div>
           <div>
             <span className="text-dark-500">{t('subscription.devices')}:</span>
@@ -601,7 +602,7 @@ export function TariffPurchaseForm({
                 {!useCustomTraffic && (
                   <div className="text-sm text-dark-400">
                     {t('subscription.customTraffic.default', {
-                      label: tariff.traffic_limit_label,
+                      label: trafficLimitLabel(tariff, t),
                     })}
                   </div>
                 )}

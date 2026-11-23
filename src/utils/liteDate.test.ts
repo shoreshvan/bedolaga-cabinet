@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { formatLiteDate } from './liteDate';
+import { uiLocale } from './uiLocale';
 
 /**
  * Даты в тестах относительные к переданному «сейчас»: абсолютные протухают
@@ -7,9 +8,18 @@ import { formatLiteDate } from './liteDate';
  * действительно сломалось.
  */
 
+vi.mock('./uiLocale', () => ({ uiLocale: vi.fn(() => 'ru-RU') }));
+
 const now = new Date('2026-09-22T12:00:00Z');
 
 describe('formatLiteDate', () => {
+  it('shows the new Persian year when Nowruz falls between two dates', () => {
+    vi.mocked(uiLocale).mockReturnValueOnce('fa-IR');
+    const before = new Date(2026, 2, 18, 12);
+    const after = new Date(2026, 2, 24, 12);
+    expect(formatLiteDate(after.toISOString(), before)).toContain('۱۴۰۵');
+  });
+
   it('в текущем году обходится без года', () => {
     const text = formatLiteDate('2026-10-15T00:00:00Z', now);
     expect(text).toContain('15');

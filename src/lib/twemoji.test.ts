@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import Twemoji from './twemoji';
 
 const SRC = join(__dirname, '..');
-const WRAPPER = 'lib/twemoji.ts';
+const WRAPPER = join('lib', 'twemoji.ts');
 
 function sourceFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {

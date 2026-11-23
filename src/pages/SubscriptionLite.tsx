@@ -1,3 +1,8 @@
+import { useAuthStore } from '@/store/auth';
+import { useSubscriptionMirror } from '@/hooks/useSubscriptionMirror';
+import { MirrorSelector } from '@/components/connection/MirrorSelector';
+import { hasUnknownManagedTraffic } from '@/utils/trafficAccounting';
+import ManagedTrafficSummary from '@/components/subscription/ManagedTrafficSummary';
 import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +29,11 @@ import { useTheme } from '@/hooks/useTheme';
 import { copyToClipboard } from '@/utils/clipboard';
 import { resolveConnectionUrlForUi } from '@/utils/connectionLink';
 import { getGlassColors } from '@/utils/glassTheme';
-import { showsAddonOptions } from '@/utils/legacySubscription';
+import {
+  canOpenTariffSwitch,
+  showsAddonOptions,
+  tariffSelectionPath,
+} from '@/utils/legacySubscription';
 import { formatLiteDate } from '@/utils/liteDate';
 
 type OpenPanel = 'traffic' | 'devices' | 'reduce' | 'servers' | 'devicesList' | 'delete' | null;
@@ -49,6 +58,7 @@ type OpenPanel = 'traffic' | 'devices' | 'reduce' | 'servers' | 'devicesList' | 
  * что ничего не становится недоступным.
  */
 export default function SubscriptionLite() {
+  const userId = useAuthStore((state) => state.user?.id);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { subscriptionId: rawId } = useParams();
@@ -68,7 +78,7 @@ export default function SubscriptionLite() {
     isError,
     refetch,
   } = useQuery({
-    queryKey: ['subscription', subscriptionId],
+    queryKey: ['subscription', subscriptionId, userId],
     queryFn: () => subscriptionApi.getSubscription(subscriptionId),
     retry: false,
     staleTime: 0,
@@ -91,12 +101,12 @@ export default function SubscriptionLite() {
   // Ссылка подписки — та же, что показывает полная страница: иначе в простом
   // виде её не было нигде, и человеку без приложения-импортёра нечего вставить.
   const { data: connectionLink, isLoading: isConnectionLinkLoading } = useQuery({
-    queryKey: ['connection-link', subscriptionId],
+    queryKey: ['connection-link', subscriptionId, userId],
     queryFn: () => subscriptionApi.getConnectionLink(subscriptionId),
     enabled: Boolean(subscription),
     retry: false,
   });
-  const connectionUrl = useMemo(
+  const canonicalConnectionUrl = useMemo(
     () =>
       resolveConnectionUrlForUi({
         mode: connectionLink?.connect_mode,
@@ -110,6 +120,12 @@ export default function SubscriptionLite() {
       }),
     [connectionLink, isConnectionLinkLoading, subscription?.subscription_url],
   );
+  const mirrorSelection = useSubscriptionMirror(
+    connectionLink,
+    canonicalConnectionUrl,
+    Boolean(subscription?.hide_subscription_link),
+  );
+  const connectionUrl = mirrorSelection.url;
   const hidesLink = Boolean(subscription?.hide_subscription_link || connectionLink?.hide_link);
   const [copied, setCopied] = useState(false);
   useEffect(() => {
@@ -179,11 +195,16 @@ export default function SubscriptionLite() {
             : t('lite.status.active', { date: formatLiteDate(subscription.end_date) })}
         </p>
         <div className="mt-7">
-          <LiteMeter
-            usedGb={subscription.traffic_used_gb}
-            limitGb={subscription.traffic_limit_gb}
-            usedPercent={subscription.traffic_used_percent}
-          />
+          {hasUnknownManagedTraffic(subscription) ? (
+            <div className="h-9" aria-hidden="true" />
+          ) : (
+            <LiteMeter
+              usedGb={subscription.traffic_used_gb}
+              limitGb={subscription.traffic_limit_gb}
+              usedPercent={subscription.traffic_used_percent}
+            />
+          )}
+          <ManagedTrafficSummary subscription={subscription} />
         </div>
       </section>
 
@@ -194,19 +215,27 @@ export default function SubscriptionLite() {
         {t('lite.action.connect')}
       </Link>
 
+      <MirrorSelector selection={mirrorSelection} />
       <div className="mt-6">
         <LiteRowGroup>
           {subscription.is_trial ? (
             // Пробный период не продлевается: «Продлить» вела на экран «Нет
             // вариантов продления». После триала покупают тариф.
             <LiteRow
-              to="/subscription/purchase"
+              to={tariffSelectionPath(subscription.id)}
               label={t('lite.rows.plans', 'Посмотреть тарифы')}
             />
-          ) : (
+          ) : !subscription.is_daily || !subscription.is_active ? (
             <LiteRow
               to={`/subscriptions/${subscription.id}/renew`}
               label={t('lite.action.renew')}
+            />
+          ) : null}
+
+          {purchaseOptions?.sales_mode === 'tariffs' && canOpenTariffSwitch(subscription) && (
+            <LiteRow
+              to={tariffSelectionPath(subscription.id)}
+              label={t('subscription.switchTariff.title')}
             />
           )}
 

@@ -114,7 +114,8 @@ describe('single source of init data', () => {
     const { readdirSync, readFileSync } = await import('node:fs');
     const { join } = await import('node:path');
 
-    const srcDir = new URL('..', import.meta.url).pathname;
+    const { fileURLToPath } = await import('node:url');
+    const srcDir = fileURLToPath(new URL('..', import.meta.url));
     const offenders: string[] = [];
 
     const walk = (dir: string): void => {

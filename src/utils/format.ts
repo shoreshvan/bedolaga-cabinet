@@ -42,11 +42,11 @@ export function formatPrice(kopeks: number, lang?: string): string {
 
   // fa/Toman is the home currency — the amount is already in Toman. No FX conversion,
   // whole numbers, "تومان" suffix (there is no ISO 4217 code for Toman).
-  if (resolvedLang === 'fa') {
+  if (config.currency === 'IRR') {
     const grouped = new Intl.NumberFormat('fa-IR', { maximumFractionDigits: 0 }).format(
       Math.round(amount),
     );
-    return `${grouped} ${config.symbol}`;
+    return `${grouped}\u00a0${config.symbol}`;
   }
 
   // Конвертация по курсу для не-рублёвых локалей. Без rates fallback на сырую сумму

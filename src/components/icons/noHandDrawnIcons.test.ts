@@ -44,7 +44,7 @@ function sourceFiles(dir: string): string[] {
 describe('иконки', () => {
   it('рукописный <svg> только в разрешённых местах', () => {
     const offenders = sourceFiles(SRC)
-      .map((path) => relative(SRC, path))
+      .map((path) => relative(SRC, path).split('\\').join('/'))
       .filter((path) => !ALLOWED.has(path))
       .filter((path) => /<svg\b/.test(readFileSync(join(SRC, path), 'utf-8')));
 

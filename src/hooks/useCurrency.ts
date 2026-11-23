@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { currencyApi, type ExchangeRates } from '../api/currency';
+import { FALLBACK_RATES } from '../utils/currencyUnits';
 import { setExchangeRates as setGlobalExchangeRates } from '../utils/format';
 import { formatDecimal } from '../utils/formatNumber';
 import { uiLocale } from '../utils/uiLocale';
@@ -15,11 +16,7 @@ const LANGUAGE_CURRENCY_MAP: Record<string, keyof ExchangeRates | 'RUB'> = {
 };
 
 // Default rates for fallback
-const DEFAULT_RATES: ExchangeRates = {
-  USD: 100,
-  CNY: 14,
-  IRR: 0.0024,
-};
+const DEFAULT_RATES = FALLBACK_RATES;
 
 export function useCurrency() {
   const { i18n, t } = useTranslation();
@@ -54,7 +51,7 @@ export function useCurrency() {
     (rubAmount: number, decimals: number = 2): string => {
       // Разряды и дробь — по правилам языка: «3 002,00», а не «3002.00».
       if (isRussian) {
-        return formatDecimal(rubAmount, decimals, uiLocale());
+        return formatDecimal(rubAmount, decimals, uiLocale(currentLanguage));
       }
 
       // fa/Toman is the backend's home currency — the amount is already in Toman,
@@ -70,9 +67,9 @@ export function useCurrency() {
         exchangeRates,
       );
 
-      return formatDecimal(convertedAmount, decimals, uiLocale());
+      return formatDecimal(convertedAmount, decimals, uiLocale(currentLanguage));
     },
-    [isRussian, targetCurrency, exchangeRates],
+    [isRussian, targetCurrency, exchangeRates, currentLanguage],
   );
 
   // Format amount with currency symbol

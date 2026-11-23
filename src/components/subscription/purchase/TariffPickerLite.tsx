@@ -26,10 +26,11 @@ export function TariffPickerLite({
   purchaseOptions,
   isTariffsMode,
   isMultiTariff,
+  subscriptionId,
   onSelectTariff,
   onSwitchTariff,
 }: TariffPickerGridProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { formatAmount, currencySymbol } = useCurrency();
   const { applyPromoDiscount } = usePromoDiscount();
 
@@ -59,7 +60,7 @@ export function TariffPickerLite({
   };
 
   const details = (tariff: Tariff) => {
-    const traffic = trafficLimitLabel(tariff, t);
+    const traffic = trafficLimitLabel(tariff, t, i18n?.language);
     const devices =
       tariff.device_limit === 0
         ? t('lite.tariff.unlimitedDevices', 'Устройств без ограничений')
@@ -76,6 +77,7 @@ export function TariffPickerLite({
           purchaseOptions,
           isTariffsMode,
           isMultiTariff,
+          subscriptionId,
         });
         const price = priceOf(tariff);
         const isCurrent = action === 'extend' || action === 'current-daily';

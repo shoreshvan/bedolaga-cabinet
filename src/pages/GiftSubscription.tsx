@@ -1,3 +1,8 @@
+import PaymentPhoneInput, {
+  requiresPaymentPhone,
+  isValidPaymentPhone,
+} from '@/components/PaymentPhoneInput';
+import { getLocalizedApiErrorMessage } from '../utils/api-error-display';
 import { uiLocale } from '@/utils/uiLocale';
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
@@ -422,6 +427,12 @@ function BuyTabContent({
   const [paymentMode, setPaymentMode] = useState<'balance' | 'gateway'>('balance');
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [selectedSubOption, setSelectedSubOption] = useState<string | null>(null);
+  const [paymentPhone, setPaymentPhone] = useState('');
+  const needsPaymentPhone =
+    paymentMode === 'gateway' && requiresPaymentPhone(selectedMethod, selectedSubOption);
+  useEffect(() => {
+    setPaymentPhone('');
+  }, [selectedMethod, selectedSubOption, paymentMode]);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Тариф и период выбираются ОДНИМ эффектом: отмеченные оператором выгодными,
@@ -476,11 +487,20 @@ function BuyTabContent({
 
   // Validation
   const canSubmit = useMemo(() => {
+    if (needsPaymentPhone && !isValidPaymentPhone(paymentPhone)) return false;
     if (!selectedTariffId || !selectedPeriodDays) return false;
     if (paymentMode === 'gateway' && !selectedMethod) return false;
     if (insufficientBalance) return false;
     return true;
-  }, [selectedTariffId, selectedPeriodDays, paymentMode, selectedMethod, insufficientBalance]);
+  }, [
+    selectedTariffId,
+    selectedPeriodDays,
+    paymentMode,
+    selectedMethod,
+    insufficientBalance,
+    needsPaymentPhone,
+    paymentPhone,
+  ]);
 
   // Purchase mutation
   const purchaseMutation = useMutation({
@@ -520,7 +540,7 @@ function BuyTabContent({
       }
     },
     onError: (err) => {
-      const msg = getApiErrorMessage(err, t('gift.failedDesc'));
+      const msg = getLocalizedApiErrorMessage(err, t('gift.failedDesc'), t);
       setSubmitError(msg);
     },
   });
@@ -545,6 +565,7 @@ function BuyTabContent({
       period_days: selectedPeriodDays,
       payment_mode: paymentMode,
       payment_method: paymentMethod,
+      ...(needsPaymentPhone ? { payment_phone: paymentPhone.trim() } : {}),
     };
 
     purchaseMutation.mutate(data);
@@ -685,6 +706,8 @@ function BuyTabContent({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {needsPaymentPhone && <PaymentPhoneInput value={paymentPhone} onChange={setPaymentPhone} />}
 
       {/* Summary / Balance info */}
       {paymentMode === 'balance' && (
@@ -857,7 +880,7 @@ function ActivateTabContent({ initialCode }: { initialCode?: string | null }) {
       const msg =
         raw === 'Cannot activate your own gift'
           ? t('gift.activateSelfError')
-          : raw || t('gift.activateError');
+          : getLocalizedApiErrorMessage(err, t('gift.activateError'), t);
       setActivateError(msg);
     },
   });
@@ -1322,7 +1345,7 @@ export default function GiftSubscription() {
 
   // Error state
   if (error || !config) {
-    const errMsg = getApiErrorMessage(error, t('gift.notFound'));
+    const errMsg = getLocalizedApiErrorMessage(error, t('gift.notFound'), t);
     return <ErrorState message={errMsg} />;
   }
 

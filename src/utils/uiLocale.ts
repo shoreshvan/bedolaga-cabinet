@@ -12,7 +12,7 @@ const LOCALE_MAP: Record<string, string> = {
  * Без него даты/числа форматируются локалью браузера (или жёстким 'fa-IR')
  * и не реагируют на смену языка в приложении.
  */
-export function uiLocale(): string {
-  const lang = (i18next.language || '').split('-')[0];
+export function uiLocale(language = i18next.language): string {
+  const lang = (language || '').split('-')[0];
   return LOCALE_MAP[lang] || 'fa-IR';
 }

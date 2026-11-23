@@ -16,8 +16,10 @@ export function formatLiteDate(value: string | null | undefined, now: Date = new
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '';
 
-  const sameYear = date.getFullYear() === now.getFullYear();
-  return date.toLocaleDateString(uiLocale(), {
+  const locale = uiLocale();
+  const year = new Intl.DateTimeFormat(locale, { year: 'numeric' });
+  const sameYear = year.format(date) === year.format(now);
+  return date.toLocaleDateString(locale, {
     day: 'numeric',
     month: 'long',
     ...(sameYear ? {} : { year: 'numeric' }),

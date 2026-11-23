@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { formatTraffic } from './formatTraffic';
 
 vi.mock('../i18n', () => ({
-  default: { t: (_key: string, fallback: string) => fallback },
+  default: { t: (key: string) => key.split('.').pop()?.toUpperCase() },
 }));
 
 describe('formatTraffic', () => {

@@ -52,10 +52,13 @@ export function trafficLimitLabel(
     traffic_limit_label: string;
   },
   t: (key: string) => string,
+  language?: string,
 ): string {
-  if (tariff.is_unlimited_traffic) return t('subscription.unlimited');
+  if (tariff.is_unlimited_traffic || tariff.traffic_limit_gb === 0) {
+    return t('subscription.unlimited');
+  }
   if (Number.isFinite(tariff.traffic_limit_gb)) {
-    return `${formatGb(tariff.traffic_limit_gb as number)} ${t('common.units.gb')}`;
+    return `${formatGb(tariff.traffic_limit_gb as number, uiLocale(language))} ${t('common.units.gb')}`;
   }
   return tariff.traffic_limit_label;
 }

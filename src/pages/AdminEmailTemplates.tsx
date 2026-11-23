@@ -64,19 +64,24 @@ function TemplateCard({
           <p className="mt-1 line-clamp-2 text-xs text-dark-400">{description}</p>
         </div>
         <div className="mt-0.5 flex flex-shrink-0 items-center gap-1 sm:gap-1.5">
-          {Object.entries(template.languages).map(([lang, status]) => (
-            <span
-              key={lang}
-              className={`inline-flex h-5 w-6 items-center justify-center rounded text-2xs font-medium sm:w-7 ${
-                status.has_custom
-                  ? 'bg-accent-500/20 text-accent-400 ring-1 ring-accent-500/30'
-                  : 'bg-dark-700 text-dark-400'
-              }`}
-              title={`${LANG_FULL_LABELS[lang] || lang}: ${status.has_custom ? 'Custom' : 'Default'}`}
-            >
-              {LANG_LABELS[lang] || lang}
-            </span>
-          ))}
+          {Object.entries(template.languages).map(([lang, status]) => {
+            const statusLabel = status.has_custom
+              ? t('admin.emailTemplates.custom')
+              : t('admin.emailTemplates.default');
+            return (
+              <span
+                key={lang}
+                className={`inline-flex h-5 w-6 items-center justify-center rounded text-2xs font-medium sm:w-7 ${
+                  status.has_custom
+                    ? 'bg-accent-500/20 text-accent-400 ring-1 ring-accent-500/30'
+                    : 'bg-dark-700 text-dark-400'
+                }`}
+                title={`${LANG_FULL_LABELS[lang] || lang}: ${statusLabel}`}
+              >
+                {LANG_LABELS[lang] || lang}
+              </span>
+            );
+          })}
         </div>
       </div>
       {(customCount > 0 || sendingOff) && (
@@ -90,7 +95,7 @@ function TemplateCard({
           {customCount > 0 && (
             <span className="inline-flex items-center gap-1 rounded-full bg-accent-500/10 px-2 py-0.5 text-2xs text-accent-400">
               <span className="h-1.5 w-1.5 rounded-full bg-accent-400" />
-              {customCount} custom
+              {t('admin.emailTemplates.customCount', { count: customCount })}
             </span>
           )}
         </div>
@@ -129,7 +134,14 @@ function TemplateEditor({
   const notify = useNotify();
   const { confirm: confirmDialog } = useNativeDialog();
 
-  const [activeLang, setActiveLang] = useState('ru');
+  // زبان پیش‌فرض ویرایشگر: زبان رابط، وگرنه فارسی، وگرنه اولین زبانی که
+  // بک‌اند واقعا برمی‌گرداند — تا تب فعال هیچ‌وقت روی زبانی که وجود ندارد نایستد.
+  const [activeLang, setActiveLang] = useState(() => {
+    const available = Object.keys(detail.languages);
+    if (available.includes(interfaceLang)) return interfaceLang;
+    if (available.includes('fa')) return 'fa';
+    return available[0] ?? 'fa';
+  });
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
   const [editSubject, setEditSubject] = useState('');
   const [editBody, setEditBody] = useState('');
@@ -407,7 +419,7 @@ function TemplateEditor({
                 srcDoc={previewHtml}
                 sandbox=""
                 className="h-[420px] w-full sm:h-[560px]"
-                title="Email Preview"
+                title={t('admin.emailTemplates.preview')}
               />
             )}
           </div>

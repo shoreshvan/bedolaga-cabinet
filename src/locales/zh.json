@@ -1730,6 +1730,7 @@
       "unsavedWarning": "未保存的更改将丢失。继续？",
       "custom": "自定义",
       "default": "默认",
+      "customCount": "{{count}} 个自定义",
       "saved": "模板已保存",
       "resetted": "模板已恢复默认",
       "testSent": "测试邮件已发送",

@@ -1812,6 +1812,7 @@
       "unsavedWarning": "Unsaved changes will be lost. Continue?",
       "custom": "Custom",
       "default": "Default",
+      "customCount": "{{count}} custom",
       "saved": "Template saved",
       "resetted": "Template reset to default",
       "testSent": "Test email sent",
